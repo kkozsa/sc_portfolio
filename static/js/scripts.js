@@ -29,23 +29,23 @@ window.addEventListener('DOMContentLoaded', event => {
 
 
 
-var tickers = ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'TSLA', 'NVDA', 'INTC', 'PLTR', 'WCBR', 'SPY', 'ETH-USD', 'BTC-USD']; // List of popular stocks
+var tickers = ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'TSLA', 'NVDA', 'INTC', 'PLTR', 'WCBR', 'SPY', 'ETH-USD', 'BTC-USD'];  // Array of stocks
 
-function startUpdateCycle() {
+function startUpdateCycle() { 
     updatePrices();
     setInterval(function () {
-        updatePrices(); // Update prices every minute
+        updatePrices();                     // Update prices every minute
     }, 60000)
 }
 
-$(document).ready(function () {
+$(document).ready(function () {             // When document ready
     tickers.forEach(function (ticker) {
         addTickerToGrid(ticker);
     });
 
-    updatePrices();
+    updatePrices();                         // Call updateprices
 
-    startUpdateCycle();
+    startUpdateCycle();                     // Call price update 60s
 
     $('#add-ticker-form').submit(function (e) {
         e.preventDefault();
@@ -61,7 +61,7 @@ $(document).ready(function () {
 
 function addTickerToGrid(ticker) {
     $('#tickers-grid').append(`<div id="${ticker}" class="stock-box"><h2>${ticker}</h2><p id="${ticker}-price"></p><p id="${ticker}-pct"></p></div>`)
-}
+}                                                           // Function adds ticker box to html grid. ID, name, placeholder for price and % change
 
 function updatePrices() {
     tickers.forEach(function (ticker) {
