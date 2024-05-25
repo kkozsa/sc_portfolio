@@ -27,9 +27,7 @@ window.addEventListener('DOMContentLoaded', event => {
 
 
 
-
-
-var tickers = ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'TSLA', 'NVDA', 'INTC', 'PLTR', 'WCBR', 'SPY', 'ETH-USD', 'BTC-USD'];  // Array of stocks
+//var tickers = ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'TSLA', 'NVDA', 'INTC', 'PLTR', 'WCBR', 'SPY', 'ETH-USD', 'BTC-USD'];  // Array of stocks
 
 function startUpdateCycle() { 
     updatePrices();
@@ -38,9 +36,9 @@ function startUpdateCycle() {
     }, 60000)
 }
 
-$(document).ready(function () {             // When document ready
+$(document).ready(function () {             // When document ready              // INDEX PAGE
     tickers.forEach(function (ticker) {
-        addTickerToGrid(ticker);
+        addTickerToGrid(ticker);        
     });
 
     updatePrices();                         // Call updateprices
@@ -52,16 +50,57 @@ $(document).ready(function () {             // When document ready
         var newTicker = $('#new-ticker').val().toUpperCase();
         if (!tickers.includes(newTicker)) {
             tickers.push(newTicker);
-            addTickerToGrid(newTicker);
+            localStorage.setItem('tickers', JSON.stringify(tickers))
+            addTickerToGrid(newTicker);            
         }
         $('#new-ticker').val('');
         updatePrices();
     });
 });
 
+
+
+$(document).ready(function () {             // When document ready              // PORTFOLIO PAGE
+    tickers.forEach(function (ticker) {
+        addTickerToGrid2(ticker);        
+    });
+
+    updatePrices();                         // Call updateprices
+
+    startUpdateCycle();                     // Call price update 60s
+
+    $('#add-ticker-form2').submit(function (e) {
+        e.preventDefault();
+        var newTicker2 = $('#new-ticker2').val().toUpperCase();
+        if (!tickers.includes(newTicker2)) {
+            tickers.push(newTicker2);
+            localStorage.setItem('tickers', JSON.stringify(tickers))
+            addTickerToGrid2(newTicker2);            
+        }
+        $('#new-ticker2').val('');
+        updatePrices();
+    });
+
+    $('#tickers-grid2').on('click', '.remove-btn', function () {         // click event listener for elements with class remove-btn
+        var tickerToRemove = $(this).data('ticker');                    // When a user clicks the "Remove" button associated with a ticker, this function executes.
+        tickers=tickers.filter(t => t !== tickerToRemove);              // It removes the ticker from the tickers array, updates the local storage, 
+        localStorage.setItem('tickers', JSON.stringify(tickers))        // and removes the ticker from the grid.
+        $(`#${tickerToRemove}`).remove();                               
+
+    });
+});
+
+
+
 function addTickerToGrid(ticker) {
     $('#tickers-grid').append(`<div id="${ticker}" class="stock-box"><h2>${ticker}</h2><p id="${ticker}-price"></p><p id="${ticker}-pct"></p></div>`)
 }                                                           // Function adds ticker box to html grid. ID, name, placeholder for price and % change
+
+function addTickerToGrid2(ticker) {
+    $('#tickers-grid2').append(`<div id="${ticker}" class="stock-box"><h2>${ticker}</h2><p id="${ticker}-price"></p><p id="${ticker}-pct"></p><button class="remove-btn" data-ticker="${ticker}">Remove</button></div>`)
+}
+
+
 
 function updatePrices() {
     tickers.forEach(function (ticker) {
