@@ -60,30 +60,58 @@ $(document).ready(function () {             // When document ready              
 
 
 
-$(document).ready(function () {             // When document ready              // PORTFOLIO PAGE
-    tickers.forEach(function (ticker) {
-        addTickerToGrid2(ticker);        
-    });
+$(document).ready(function () {             // When document ready              // PORTFOLIO PAGE   tickers fetched from the server
+    fetch ('/tickers').then(data=>data.json())
+    .then(data=>data['tickers'])
+    .then (tickers => tickers.forEach(function (ticker) {
+        addLiveTicker1(ticker);        
+    }));
 
     updatePrices();                         // Call updateprices
 
     startUpdateCycle();                     // Call price update 60s
 
-    $('#add-ticker-form2').submit(function (e) {
+    $('#add-ticker-form2').submit(
+        function (e) {
         e.preventDefault();
         var newTicker2 = $('#new-ticker2').val().toUpperCase();
-        if (!tickers.includes(newTicker2)) {
-            tickers.push(newTicker2);
-            localStorage.setItem('tickers', JSON.stringify(tickers))
-            addTickerToGrid2(newTicker2);            
-        }
+        addLiveTicker(newTicker2);
+
+        
         $('#new-ticker2').val('');
         updatePrices();
+
     });
+
+    let addLiveTicker=(newTicker2) =>{                  /////// Adding a new ticker, POST request to server to update portfolio
+    if (!tickers.includes(newTicker2)) {
+        tickers.push(newTicker2);
+        fetch('/portfolio', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ticker: newTicker2})
+          })
+            .then (data => data.json())
+            .then (data => {})
+            .catch (_=> alert("Test alert"));                               
+        localStorage.setItem('tickers', JSON.stringify(tickers))
+        addTickerToGrid2(newTicker2);            
+        }}
+
+    let addLiveTicker1=(newTicker2) =>{
+    if (!tickers.includes(newTicker2)) {
+        tickers.push(newTicker2);
+        localStorage.setItem('tickers', JSON.stringify(tickers))
+        addTickerToGrid2(newTicker2);
+        updatePrices();
+    }}
 
     $('#tickers-grid2').on('click', '.remove-btn', function () {         // click event listener for elements with class remove-btn
         var tickerToRemove = $(this).data('ticker');                    // When a user clicks the "Remove" button associated with a ticker, this function executes.
-        tickers=tickers.filter(t => t !== tickerToRemove);              // It removes the ticker from the tickers array, updates the local storage, 
+        tickers=tickers.filter(t => t !== tickerToRemove);              ///////////// It removes the ticker from the tickers array, updates the local storage, 
         localStorage.setItem('tickers', JSON.stringify(tickers))        // and removes the ticker from the grid.
         $(`#${tickerToRemove}`).remove();                               
 

@@ -52,9 +52,61 @@ def login():
 
                                                         # Portfolio
 
-@app.route('/portfolio')
+@app.route('/portfolio', methods=['GET', 'POST'])                   
 def portfolio():
-    return render_template('portfolio.html')
+    if 'email' not in session:                      # Check if the user is logged in
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+                                                            # Get userid from the da based session email
+        email = session['email']                            # Identify user by email
+        cursor = mysql_conn.cursor()
+        cursor.execute("SELECT userid FROM users WHERE email = %s", (email,))
+        userid = cursor.fetchone()[0]                       # userid first column
+        cursor.close()
+        content = request.json
+        ticker = content.get('ticker')                                              # Get ticker from the form
+
+                                                                                        # Insert ticker into user_portfolio table
+        cursor = mysql_conn.cursor()
+        cursor.execute("INSERT INTO user_portfolio (userid, ticker) VALUES (%s, %s)", (userid, ticker))
+        mysql_conn.commit()
+        cursor.close()
+        whatever={"result":"success"}
+        return jsonify(whatever)
+
+                                                     # Avoid resubmission
+                                                                            #return redirect(url_for('portfolio'))
+
+                                                                                # Fetch user id from the database based on the email stored in the session
+    email = session['email']
+    cursor = mysql_conn.cursor()
+    cursor.execute("SELECT userid FROM users WHERE email = %s", (email,))
+    userid = cursor.fetchone()[0]  
+
+    cursor = mysql_conn.cursor()
+    cursor.execute("SELECT ticker FROM user_portfolio WHERE userid = %s", (userid,))
+    user_tickers = cursor.fetchall()
+    cursor.close()
+    print (user_tickers)
+    return render_template('portfolio.html', userid=userid, user_tickers=user_tickers)
+
+
+@app.route('/tickers', methods=['GET'])                                                 # NEW ROUTE PAULs CLASS 2024_05_28 VIDEO
+def tickers():
+    email = session['email']
+    cursor = mysql_conn.cursor()
+    cursor.execute("SELECT userid FROM users WHERE email = %s", (email,))
+    userid = cursor.fetchone()[0]  
+
+    cursor = mysql_conn.cursor()
+    cursor.execute("SELECT ticker FROM user_portfolio WHERE userid = %s", (userid,))
+    user_tickers = cursor.fetchall()
+    cursor.close()
+    whatever = {'tickers': list(map (lambda x:x[0],user_tickers))}
+    return jsonify(whatever)
+
+
 
                                                         # Transaction
 
