@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TSLA Stock test</title>
+</head>
+<body>
+    <h1>TSLA Stock test</h1>
+    <div id="priceDisplay"></div>
+
+    <script>
+        async function fetchStockPrice() {
+            var ticker = 'TSLA';                                        // Ticker symbol of TSLA
+            var apiKey = 'hS9KDzrIQhaoZYmDSYxeR5shEfUdwqteaH0PBDSz';    // API key
+            
+            try {
+                // Fetch stock data from Yahoo Finance
+                var response = await fetch(`https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-summary?symbol=${ticker}&region=US`, {
+                    method: 'GET',
+                    headers: {
+                        'x-rapidapi-host': 'apidojo-yahoo-finance-v1.p.rapidapi.com',
+                        'x-rapidapi-key': apiKey
+                    }
+                });
+    
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch data: ${response.status} - ${response.statusText}`);ó
+                }
+    
+                var data = await response.json();
+    
+                if (data.price && data.price.regularMarketPrice) {
+                    var price = data.price.regularMarketPrice.raw;
+                    document.getElementById('priceDisplay').innerText = `Price for ${ticker}: $${price.toFixed(2)}`;
+                } else {
+                    throw new Error(`Stock symbol "${ticker}" not found or price data unavailable.`);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('priceDisplay').innerText = 'Error: ' + error.message;
+            }
+        }
+
+        // Function call to fetch TSLA stock price when the page loads.
+        window.onload = fetchStockPrice;
+    </script>
+    
+</body>
+</html>
+
