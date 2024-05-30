@@ -1,11 +1,13 @@
 import yfinance as yf
 import mysql.connector
+from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, jsonify, session
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 app.secret_key = b'11223344'
 
-                                                        # Database config
+
+# Database config
 
 mysql_host = 'localhost'
 mysql_user = 'sqluser'
@@ -14,7 +16,8 @@ mysql_password = '123456789'
 mysql_db = 'sandc_db'
 #mysql_password=input('Enter mySQL password: ')
 
-                                                        # Connect to MySQL
+
+# Connect to MySQL
 
 mysql_conn = mysql.connector.connect(
     host=mysql_host,
@@ -23,13 +26,15 @@ mysql_conn = mysql.connector.connect(
     database=mysql_db
 )
 
-                                                # Routes
+
+# Main route
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-                                                        # Login
+
+# Login route
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -50,7 +55,8 @@ def login():
 
     return render_template('login.html')
 
-                                                        # Portfolio
+
+# Portfolio route
 
 @app.route('/portfolio', methods=['GET', 'POST'])                   
 def portfolio():
@@ -75,10 +81,6 @@ def portfolio():
         whatever={"result":"success"}
         return jsonify(whatever)
 
-                                                     # Avoid resubmission
-                                                                            #return redirect(url_for('portfolio'))
-
-                                                                                # Fetch user id from the database based on the email stored in the session
     email = session['email']
     cursor = mysql_conn.cursor()
     cursor.execute("SELECT userid FROM users WHERE email = %s", (email,))
@@ -92,7 +94,9 @@ def portfolio():
     return render_template('portfolio.html', userid=userid, user_tickers=user_tickers)
 
 
-@app.route('/tickers', methods=['GET'])                                                 # NEW ROUTE PAULs CLASS 2024_05_28 VIDEO
+# Tickers route (tickers to database)
+
+@app.route('/tickers', methods=['GET'])                                                 
 def tickers():
     email = session['email']
     cursor = mysql_conn.cursor()
@@ -107,21 +111,44 @@ def tickers():
     return jsonify(whatever)
 
 
+# Remove tickers route (Remove tickers from database)
 
-                                                        # Transaction
+@app.route('/remove_ticker', methods=['POST'])
+def remove_ticker():
+    if 'email' not in session:
+        return jsonify({'error': 'Unauthorized'}), 403
+    
+    email = session['email']
+    content = request.json
+    ticker = content.get('ticker')
+
+    cursor = mysql_conn.cursor()
+    cursor.execute("SELECT userid FROM users WHERE email = %s", (email,))
+    userid = cursor.fetchone()[0]
+
+    cursor.execute("DELETE FROM user_portfolio WHERE userid = %s AND ticker = %s", (userid, ticker))
+    mysql_conn.commit()
+    cursor.close()
+
+    return jsonify({'result': 'success'})
+
+
+# Transaction route (delete or improve later)
 
 @app.route('/transactions')
 def transactions():
     return render_template('transactions.html')
 
-                                                        # Logout
+
+# Logout route
 
 @app.route('/logout')
 def logout():
     session.clear()                         # Clear user data
     return redirect(url_for('login'))
 
-                                                        # Register
+
+# Register route (Register details to database)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -150,9 +177,8 @@ def register():
 
     return render_template('register.html')             # Registration for rendered if GET method
 
-from datetime import datetime
 
-                                                        # Profile
+# Profile route (Profile details to database)
 
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
@@ -197,12 +223,12 @@ def profile():
     return render_template('profile.html', user=user)
 
 
-                                                        # Get stock info
+# Get stock data route (Fetch historical stock price using yahoo finance)
 
 @app.route('/get_stock_data', methods=['POST'])
 def get_stock_data():
     ticker = request.json['ticker']                     # Extract the value ticker from json data
-    data = yf.Ticker(ticker).history(period='1y')       # Fetches historical stock price using YF for past 1 year.          Change later
+    data = yf.Ticker(ticker).history(period='1y')               # Check "1y" options later
     return jsonify({'currentPrice': data.iloc[-1].Close,
                     'openPrice': data.iloc[-1].Open})
 
