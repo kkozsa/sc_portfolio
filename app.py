@@ -221,7 +221,7 @@ def profile():
     }
 
     return render_template('profile.html', user=user)
-
+# reference: Login and Registration Project Using Flask and MySQL https://www.geeksforgeeks.org/login-and-registration-project-using-flask-and-mysql/
 
 # Get stock data route (Fetch historical stock price using yahoo finance)
 
@@ -231,6 +231,7 @@ def get_stock_data():
     data = yf.Ticker(ticker).history(period='1y')               # Check "1y" options later
     return jsonify({'currentPrice': data.iloc[-1].Close,
                     'openPrice': data.iloc[-1].Open})
+# reference: NeuralNine - Real-Time Stock Price Tracker in Python https://youtu.be/GSHFzqqPq5U?list=PLF6w5cpj_zBo6dTD4avNwz1xbqYRiKBsN
 
 
 if __name__ == '__main__':

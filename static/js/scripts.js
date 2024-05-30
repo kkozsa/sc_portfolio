@@ -1,8 +1,4 @@
-/*!
-* Start Bootstrap - Simple Sidebar v6.0.6 (https://startbootstrap.com/template/simple-sidebar)
-* Copyright 2013-2023 Start Bootstrap
-* Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-simple-sidebar/blob/master/LICENSE)
-*/
+
 
 
 // Toggle the side navigation
@@ -17,8 +13,9 @@ window.addEventListener('DOMContentLoaded', event => {
         });
     }
 });
+// reference: Start Bootstrap - Simple Sidebar v6.0.6 (https://startbootstrap.com/template/simple-sidebar)
+// Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
 
-//var tickers = ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'TSLA', 'NVDA', 'INTC', 'PLTR', 'WCBR', 'SPY', 'ETH-USD', 'BTC-USD'];  // Array of stocks
 
 
 // Update prices every minute
@@ -177,3 +174,4 @@ function updatePrices() {
         })
     })
 }
+// reference: NeuralNine - Real-Time Stock Price Tracker in Python https://youtu.be/GSHFzqqPq5U?list=PLF6w5cpj_zBo6dTD4avNwz1xbqYRiKBsN
