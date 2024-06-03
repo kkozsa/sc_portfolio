@@ -23,10 +23,11 @@ User can add and remove assets. Asset information updated automatically every 60
 Email format and password match validation on Login / Register page.
 
 ## Technology used:
-Frontend: HTML, CSS, Bootstrap, Javascript
-Backend: Python, Flask, Javascript, MySQL
+Frontend: HTML, CSS, Bootstrap, Javascript.
 
-External APIs: Alphavantage, Polygon, Yahoo Finance 
+Backend: Python, Flask, Javascript, MySQL.
+
+External APIs: Alphavantage, Polygon, Yahoo Finance. 
 External APIs were tested in the beginning of the project. Alphavantage is limited to 25 API requests per day, while Polygon is also limited to 5 API request per minute. Yahoo Finance API has 2000 API requests per hour, so I decided to implement that in the information system.
 
 
