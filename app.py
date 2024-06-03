@@ -10,7 +10,7 @@ app.secret_key = b'11223344'
 # Database config
 
 mysql_host = 'localhost'
-#mysql_user = 'sqluser'
+mysql_user = 'sqluser'
 mysql_user = 'web'                           
 mysql_password = '123456789'
 mysql_db = 'sandc_db'
