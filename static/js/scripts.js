@@ -138,7 +138,7 @@ function addTickerToGrid(ticker) {
 
 function addTickerToGrid2(ticker) {
     $('#tickers-grid2').append(`<div id="${ticker}" class="stock-box"><h2>${ticker}</h2><p id="${ticker}-price"></p><p id="${ticker}-pct"></p><button class="remove-btn" data-ticker="${ticker}">Remove</button></div>`)
-}
+}                                                           // Same as above + remove button
 
 
 // Send AJAX request to fetch stock data for tickers. Update price change

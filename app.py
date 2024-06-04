@@ -11,10 +11,10 @@ app.secret_key = b'11223344'
 
 mysql_host = 'localhost'
 mysql_user = 'sqluser'
-mysql_user = 'web'                           
+mysql_user = 'web'                 # Uncomment for Azure          
 mysql_password = '123456789'
 mysql_db = 'sandc_db'
-mysql_password=input('Enter mySQL password: ')
+mysql_password=input('Enter mySQL password: ')      # Uncomment for Azure 
 
 
 # Connect to MySQL
@@ -222,6 +222,7 @@ def profile():
 
     return render_template('profile.html', user=user)
 # reference: Login and Registration Project Using Flask and MySQL https://www.geeksforgeeks.org/login-and-registration-project-using-flask-and-mysql/
+# reference: How to get Data from MySQL DB on Python Flask? https://stackoverflow.com/questions/72608413/how-to-get-data-from-mysql-db-on-python-flask
 
 # Get stock data route (Fetch historical stock price using yahoo finance)
 
