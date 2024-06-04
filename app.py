@@ -14,7 +14,7 @@ mysql_user = 'sqluser'
 mysql_user = 'web'                 # Uncomment for Azure          
 mysql_password = '123456789'
 mysql_db = 'sandc_db'
-mysql_password=input('Enter mySQL password: ')      # Uncomment for Azure 
+mysql_password=open(".pass").readline().strip()          #input('Enter mySQL password: ')      # Uncomment for Azure 
 
 
 # Connect to MySQL
